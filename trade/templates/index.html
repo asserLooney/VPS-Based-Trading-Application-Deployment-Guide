@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+    
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .table {
+            width: 80%;
+            margin: 0 auto 40px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .table-header {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        .table-header, .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            padding: 20px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        const installSocketIOClient = () => {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js';
+            document.head.appendChild(script);
+            script.onload = () => {
+                console.log('socket.io-client 2.3.0 loaded successfully.');
+                initializeSocketIO();
+            };
+        };  
+
+	var socket = io.connect('http://185.92.220.43:5000');
+
+
+
+	socket.on('adx', function(msg) {
+	    const data = msg.data;
+	    
+	    const latestTime = Object.keys(data["ADX_14"]).pop();
+
+	    const latestADXValue = data["ADX_14"][latestTime];
+	    const latestDMPValue = data["DMP_14"][latestTime];
+	    const latestDMNValue = data["DMN_14"][latestTime];
+
+	    $('#adx-row').html(`<div>${latestTime}</div><div>${latestADXValue.toFixed(2)}</div><div>${latestDMPValue.toFixed(2)}</div><div>${latestDMNValue.toFixed(2)}</div>`);
+	});
+
+        socket.on('cmf', function(msg) {
+            const data = msg.data;
+            const latestTime = Object.keys(data).pop();
+            const latestValue = data[latestTime];
+            $('#cmf-row').html(`<div>${latestTime}</div><div>${latestValue.toFixed(2)}</div><div>CMF</div><div>CMF</div>`);
+        });
+        socket.on('mfi', function(msg) {
+            const data = msg.data;
+            const latestTime = Object.keys(data).pop();
+            const latestValue = data[latestTime];
+            $('#mfi-row').html(`<div>${latestTime}</div><div>${latestValue.toFixed(2)}</div><div>MFI</div><div>MFI</div>`);
+        });
+        socket.on('rsi', function(msg) {
+            const data = msg.data;
+            const latestTime = Object.keys(data).pop();
+            const latestValue = data[latestTime];
+            $('#rsi-row').html(`<div>${latestTime}</div><div>${latestValue.toFixed(2)}</div><div>RSI</div><div>RSI</div>`);
+        });
+        socket.on('sma', function(msg) {
+            const data = msg.data;
+            const latestTime = Object.keys(data).pop();
+            const latestValue = data[latestTime];
+            $('#sma-row').html(`<div>${latestTime}</div><div>${latestValue.toFixed(2)}</div><div>SMA</div><div>SMA</div>`);
+        });
+    </script>
+</head>
+<body>
+    <h1>Real-time Indicators</h1>
+
+    <div class="table">
+        <div class="table-header">
+            <div>Time</div>
+            <div>ADX</div>
+            <div>DMP</div>
+            <div>DMN</div>
+        </div>
+        <div id="adx-row" class="table-row"></div>
+    </div>
+    <div class="table">
+        <div class="table-header">
+            <div>Time</div>
+            <div>CMF</div>
+            <div>Name 2</div>
+            <div>Name 3</div>
+        </div>
+        <div id="cmf-row" class="table-row"></div>
+    </div>
+    <div class="table">
+        <div class="table-header">
+            <div>Time</div>
+            <div>MFI</div>
+            <div>Name 2</div>
+            <div>Name 3</div>
+        </div>
+        <div id="mfi-row" class="table-row"></div>
+    </div>
+    <div class="table">
+        <div class="table-header">
+            <div>Time</div>
+            <div>RSI</div>
+            <div>Name 2</div>
+            <div>Name 3</div>
+        </div>
+        <div id="rsi-row" class="table-row"></div>
+    </div>
+    <div class="table">
+        <div class="table-header">
+            <div>Time</div>
+            <div>SMA</div>
+            <div>Name 2</div>
+            <div>Name 3</div>
+        </div>
+        <div id="sma-row" class="table-row"></div>
+    </div>
+</body>
+</html>
+

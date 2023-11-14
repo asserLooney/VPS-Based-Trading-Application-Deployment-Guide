@@ -1,0 +1,143 @@
+###### Don't use sudo reboot #####
+1- see how to install python 3.8 in it's corresponding attached text file. 
+
+2- To check if the appropriate version of python is installed run:
+python3.8 --version
+
+3- installed pip "sudo apt-get install python3-pip"
+
+
+
+4- installed necessary libraries 
+	pip3 install flask flask_socketio asyncio websockets pandas pandas_ta flask_cors configobj jsonpatch jsonschema netifaces oauthlib pyserial pyyaml requests pymongo
+pip3 install wheel
+pip3 install --ignore-installed flask
+pip3 install --ignore-installed gunicorn
+
+
+5- Populate server directory with project files //enter the 2 steps below
+sudo mkdir -p /var/www/trade
+cd /var/www/trade
+mkdir logs
+
+
+6- transfer files to server from my machine using : 
+	### to copy a file from your local pc to the VPS use (in your local machine terminal) :
+su -[local pc username]
+scp -r [path to folder] root@[Ip of your server here]:/var/www/trade
+
+
+
+
+7- after transfering the files. run app.py : 
+	navigate to app.py directory 
+	use "python3.8 app.py"
+
+8- goto website : http://45.32.235.15:5000/ and wait for it to load (1 minute)
+
+#####	 now it's time to install MongoDB
+
+follow instructions here : https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+
+or just follow along. 
+
+
+
+
+-copy the following key : 
+"curl -fsSL https://pgp.mongodb.com/server-6.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg \
+   --dearmor"
+   
+ -copy this : 
+ "echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+"
+
+- time to update packages : 
+	sudo apt-get update
+
+- install mongodb : 
+	"sudo apt-get install -y mongodb-org"
+	
+### now you're ready for mongoDb usage  for some commands : 
+
+-  start : sudo systemctl start mongod
+
+-  reload : sudo systemctl daemon-reload
+
+- status : sudo systemctl status mongod
+
+- enable on startup : sudo systemctl enable mongod
+
+- stop : sudo systemctl stop mongod
+
+- restart : sudo systemctl restart mongod
+
+- start bash : mongosh
+   
+   
+  ##### follow the following instructions to create user and administrative creds : 
+
+1- start mongodb 
+
+2- reload daemon
+
+3 - enable monogo on startup
+
+4- enter mongo bash using : monogsh
+
+### follow the following commands to create users. 
+
+1 - use admin
+
+2- db.createUser({user: "admin", pwd: "adminpassword", roles: [{role: "root", db: "admin"}]})
+
+3- db.createUser({user: "user", pwd: "userpassword", roles: [{role: "readWriteAnyDatabase", db: "admin"}]})
+
+4- Type ".exit" and hit enter to exit from MongoShell
+
+
+ ### BindIP For Remote Connection & Enable authentication
+You have to edit a configuration file to bind the ip so that you can use it remotely.
+
+
+1- nano /etc/mongod.conf
+
+2- goto #network interfaces and paste the following : 
+
+net:
+  port: 27017
+  bindIp: 0.0.0.0
+security:
+  authorization: enabled
+  
+ 3- press [ctl+X]  [y]  [Enter]
+ 
+ 4- restart mongo
+  
+
+### in case of error in mongoDB "failed (exit -code) 
+use the following two commands then restart mongoDB
+
+sudo chown -R mongodb:mongodb /var/lib/mongodb
+sudo chown mongodb:mongodb /tmp/mongodb-27017.sock
+
+sudo systemctl restart mongod
+
+
+### don't forget to change IP address of your server in the index.HTML page in the following line : 
+
+	var socket = io.connect('http://45.32.235.15:5000');
+	
+
+
+### also change your mongo URI in the python code itself line 15:
+
+example : mongodb://user:userpassword@45.32.235.15:27017/
+
+username of the mongo user : user 
+password of the mongo user : userpassword
+ip of the remote server : xxx.xxx.xxx.xx
+port : 27017
+

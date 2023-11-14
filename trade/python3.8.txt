@@ -1,0 +1,32 @@
+Update your package lists:
+
+sudo apt update
+
+
+
+Install the software-properties-common package, which allows you to easily manage software repositories:
+
+sudo apt install software-properties-common
+
+
+
+Add the deadsnakes PPA:
+
+sudo add-apt-repository ppa:deadsnakes/ppa
+
+
+
+Update the package lists again:
+
+sudo apt update
+
+
+
+Install Python 3.8:
+
+sudo apt install python3.8
+
+
+Verify the installation by checking the Python version:
+
+python3.8 --version
